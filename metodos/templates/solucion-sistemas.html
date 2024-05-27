@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Sistemas de Ecuaciones</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Jacobi</h3>
+                    <p class="card-text">El método de Jacobi es un algoritmo iterativo para determinar las soluciones de un sistema de ecuaciones lineales de la forma Ax = b. Es particularmente útil para matrices diagonales dominantes.</p>
+                    <a href="/jacobi" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Gauss-Seidel</h3>
+                    <p class="card-text">El método de Gauss-Seidel es una técnica iterativa para resolver un sistema de ecuaciones lineales. Es una mejora del método de Jacobi, que generalmente converge más rápido.</p>
+                    <a href="/gauss-seidel" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">SOR</h3>
+                    <p class="card-text">El método de Sobrerrelajación Sucesiva (SOR) es una variante del método de Gauss-Seidel que puede acelerar la convergencia mediante el uso de un factor de relajación.</p>
+                    <a href="/sor" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

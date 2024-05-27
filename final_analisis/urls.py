@@ -18,6 +18,34 @@ from django.urls import path, include
 from metodos import views
 
 urlpatterns = [
-    path("", views.landing, name="landing"),
+# basico
     path('admin/', admin.site.urls),
+    path("", views.landing, name="landing"),
+    path("menuPrincipal", views.menu, name="menuPrincipal"),
+    path("solucion-numerica", views.menuSolucionUnaSolaVariable, name="solucion-numerica"),
+    path("solucion-sistemas", views.menuSistEcu, name="solucion-sistemas"),
+    path("interpolacion", views.menuInterpolacion, name="interpolacion"),
+
+# solucion para sistemas de una sola variables
+    path("biseccion", views.vistaBiseccion, name="biseccion"),
+    path('punto-fijo', views.vistaPuntoFijo, name="punto-fijo"),
+    path('newton', views.vistaNewton, name="newton"),
+    path('regla-falsa', views.vistaReglaFalsa, name="regla-falsa"),
+    path('secante', views.vistaSecante, name="secante"),
+    path('raices-multiples', views.vistaReicesMultiples, name="raices-multiples"),
+    path('biseccion', views.vistaBiseccion, name="biseccion"),
+
+# solucion para sistemas de ecuaciones
+    path('jacobi', views.vistaJacobi, name="jacobi"),
+    path('gauss-seidel', views.vistaGaussSeidel, name="gauss-seidel"),
+    path('sor', views.vistaSor, name="sor"),
+
+# interpolacion
+    path('vandermonde', views.vistaVandermonde, name="vandermonde"),
+    path('spline', views.vistaSpline, name="spline"),
+    path('newton-interpolante', views.vistaNewtonInt, name="newton-interpolante"),
+    path('lagrange', views.vistaLagrange, name="lagrange"),
+
+# error
+    path('error', views.vistaError, name="error"),
 ]

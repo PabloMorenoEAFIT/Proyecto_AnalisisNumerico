@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4 d-flex">
+            <div class="card w-100">
+                <div class="card-body">
+                    <h3 class="card-title">Solución numérica para sistemas de una sola variable</h3>
+                    <p class="card-text">Este método proporciona soluciones aproximadas para ecuaciones que no se pueden resolver analíticamente. Es útil para ecuaciones no lineales complejas.</p>
+                    <a href="/solucion-numerica" class="btn btn-primary mt-auto">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 d-flex">
+            <div class="card w-100">
+                <div class="card-body">
+                    <h3 class="card-title">Solución de sistemas de ecuaciones</h3>
+                    <p class="card-text">Las técnicas de solución de sistemas de ecuaciones permiten encontrar valores desconocidos en sistemas lineales o no lineales. Estas técnicas son cruciales en varias aplicaciones científicas y de ingeniería.</p>
+                    <a href="/solucion-sistemas" class="btn btn-primary mt-auto">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 d-flex">
+            <div class="card w-100">
+                <div class="card-body">
+                    <h3 class="card-title">Interpolación</h3>
+                    <p class="card-text">La interpolación es un método para estimar nuevos datos dentro de un rango de un conjunto discreto de puntos de datos conocidos. Es fundamental en la ciencia de datos y análisis numérico.</p>
+                    <a href="/interpolacion" class="btn btn-primary mt-auto">Leer más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

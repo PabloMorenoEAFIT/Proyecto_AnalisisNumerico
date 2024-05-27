@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Bisección</h3>
+                    <p class="card-text">El método de bisección es un método de búsqueda de raíces que trabaja dividiendo el intervalo y seleccionando subintervalos donde cambia de signo la función.</p>
+                    <a href="/biseccion" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Punto Fijo</h3>
+                    <p class="card-text">El método del punto fijo es una técnica iterativa para resolver ecuaciones, donde se transforma la ecuación original en una forma que permite la iteración.</p>
+                    <a href="/punto-fijo" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Newton</h3>
+                    <p class="card-text">El método de Newton, también conocido como método de Newton-Raphson, es una técnica poderosa para encontrar raíces de funciones no lineales mediante derivadas.</p>
+                    <a href="/newton" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Regla Falsa</h3>
+                    <p class="card-text">El método de la regla falsa es una técnica de interpolación lineal para encontrar raíces, similar a la bisección pero más eficiente en ciertos casos.</p>
+                    <a href="/regla-falsa" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Secante</h3>
+                    <p class="card-text">El método de la secante es una variación del método de Newton que no requiere el cálculo de derivadas, utilizando en su lugar una secante para aproximar la raíz.</p>
+                    <a href="/secante" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Raíces Múltiples</h3>
+                    <p class="card-text">El método de raíces múltiples se utiliza para encontrar raíces en funciones donde la raíz tiene una multiplicidad mayor a uno, adaptando los métodos tradicionales.</p>
+                    <a href="/raices-multiples" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

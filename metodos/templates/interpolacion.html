@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2>Interpolación</h2>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Vandermonde</h3>
+                    <p class="card-text">El método de interpolación de Vandermonde utiliza una matriz para resolver un sistema lineal y encontrar los coeficientes del polinomio interpolante.</p>
+                    <a href="/vandermonde" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Spline</h3>
+                    <p class="card-text">La interpolación spline utiliza polinomios para proporcionar una aproximación suave y continua entre los puntos de datos. Existen diferentes tipos como lineal, cuadrático y cúbico.</p>
+                    <a href="/spline" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Newton Interpolante</h3>
+                    <p class="card-text">El método de Newton Interpolante utiliza diferencias divididas para construir el polinomio interpolante de manera eficiente.</p>
+                    <a href="/newton-interpolante" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Lagrange</h3>
+                    <p class="card-text">La interpolación de Lagrange utiliza polinomios base para construir el polinomio interpolante que pasa exactamente por un conjunto dado de puntos.</p>
+                    <a href="/lagrange" class="btn btn-primary">Leer más</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
