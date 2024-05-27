@@ -48,4 +48,6 @@ urlpatterns = [
 
 # error
     path('error', views.vistaError, name="error"),
+# graficas
+    path('grafica', views.graficas, name="grafica"),
 ]

@@ -1,7 +1,69 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block content %}
 
-Newton
+<div class="container mt-4"></div>
+<div class="info">
+    <h2>Metodo Newton-Raphson</h2>
+</div>
+
+
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese los datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label for="funcion">Función</label>
+                        <input type="text" class="form-control" name="funcion" placeholder="f(x)">
+
+                        <label for="funcion">Funcion F` (Primera derivada)</label>
+                        <input type="text" class="form-control" name="funcion-df"  placeholder="f'(x)">
+
+                        <label for="funcion">Valor inicial (x0)</label>
+                        <input type="text" class="form-control" name="vInicial" placeholder="X0">
+
+                        <label for="funcion">Tolerancia</label>
+                        <input type="text" class="form-control" name="tolerancia" placeholder="Tol">
+
+                        <label for="funcion">Iteraciones</label>
+                        <input type="text" class="form-control" name="iteraciones" placeholder="Iteraciones">
+                        
+                        <button type="submit" class="btn btn-outline-secondary" >Calcular</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="col-5">
+        <h5>Resultados: {{data.root}}</h5> 
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Iteración</th>
+                    <th>Xi</th>
+                    <th>F(Xi)</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for dato in data.results %}
+                <tr>
+                    {%for valores in dato %}
+                    <td>{{valores}}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+    </div>
+</div>
 
 {% endblock %}

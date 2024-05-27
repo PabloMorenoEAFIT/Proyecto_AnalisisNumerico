@@ -1,7 +1,68 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block content %}
 
-Biseccion
+<div class="container mt-4"></div>
+<div class="info">
+    <h2>Bisección</h2>
+</div>
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label for="funcion">Función</label>
+                        <input type="text" class="form-control" name="funcion" placeholder="Ingrese la función">
+
+                        <label for="a">Valor de a</label>
+                        <input type="text" class="form-control" name="a" placeholder="Ingrese el valor de a">
+
+                        <label for="b">Valor de b</label>
+                        <input type="text" class="form-control" name="b" placeholder="Ingrese el valor de b">
+
+                        <label for="tol">Tolerancia</label>
+                        <input type="text" class="form-control" name="tol" placeholder="Ingrese la tolerancia">
+
+                        <label for="max_count">Número máximo de iteraciones</label>
+                        <input type="text" class="form-control" name="max_count" placeholder="Ingrese el número máximo de iteraciones">
+                        
+                        <button type="submit" class="btn btn-outline-secondary">Calcular</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-5">
+        
+        <h5>Resultados: {{ results.root }}</h5>  
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Iteración</th>
+                    <th>a</th>
+                    <th>m</th>
+                    <th>b</th>
+                    <th>f(m)</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dato in results.results %}
+                <tr>
+                    {% for valores in dato %}
+                    <td>{{ valores }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+</div>
 
 {% endblock %}
