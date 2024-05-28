@@ -1,7 +1,54 @@
-{% extends 'layout.html' %}
-
+{% extends "layout.html" %}
 {% block content %}
+<div class="container">
+    <h1>Error en el método numérico</h1>
+    <strong>
+        <ul>
+            Ha ocurrido un error al intentar ejecutar el método numérico.
+            <br>
+            A continuación se presentan algunas posibles razones y soluciones
+        </ul>
+    </strong>
+    <h2>Solución de sistemas de una sola variable</h2>
+    <p><strong>Posibles causas:</strong></p>
+    <ul>
+        La función puede no tener raíces en el intervalo dado.
+        <br>
+        La tolerancia o el número de iteraciones pueden no ser suficientes para alcanzar la convergencia.
+    </ul>
+    <p><strong>Posibles soluciones:</strong></p>
+    <ul>
+        Revisar la función y el intervalo de búsqueda
+        <br>
+        Ajustar la tolerancia o aumentar el número de iteraciones.
+    </ul>
 
-Error
+    <h2>Solución de sistemas de ecuaciones</h2>
+    <p><strong>Posibles causas:</strong></p>
+    <ul>
+        El sistema puede ser singular o mal condicionado.
+        <br>
+        La matriz de coeficientes puede no ser cuadrada o tener rango deficiente.
+    </ul>
+    <p><strong>Posibles soluciones:</strong></p>
+    <ul>
+        Verificar la consistencia del sistema y la matriz de coeficientes.
+        <br>
+        Aplicar métodos de factorización o descomposición adecuados.
+    </ul>
 
+    <h2>Interpolación</h2>
+    <p><strong>Posibles causas:</strong></p>
+    <ul>
+        Los puntos de interpolación pueden estar mal distribuidos o ser insuficientes.
+        <br>
+        El grado del polinomio interpolante puede ser demasiado alto para los datos proporcionados.
+    </ul>
+    <p><strong>Posibles soluciones:</strong></p>
+    <ul>
+        Revisar la distribución y la cantidad de puntos de interpolación.
+        <br>
+        Reducir el grado del polinomio o utilizar métodos de interpolación más avanzados.
+    </ul>
+</div>
 {% endblock %}

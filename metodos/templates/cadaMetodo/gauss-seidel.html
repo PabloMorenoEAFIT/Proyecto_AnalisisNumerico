@@ -1,7 +1,80 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block content %}
 
-gauss-seidel
+<div class="container mt-4"></div>
+<div class="info">
+    <h1>Método de Gauss Seidel</h1>
+</div>
+
+
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label for="funcion">Matriz A</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="matrizA" 
+                                placeholder="Matriz A">
+
+                        <label for="funcion">Vector X0</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="vectorX0"  
+                                placeholder="X0">
+
+                        <label for="funcion">Vector B</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="vectorB" 
+                                placeholder="B">
+
+                        <label for="funcion">Tolerancia</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="tolerancia" 
+                                placeholder="Tol">
+
+<!--                         <label for="funcion">Valor norma</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="norma" 
+                                placeholder="Example input"> -->
+
+                        <label for="funcion">Iteraciones</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="iteraciones" 
+                                placeholder="Iteraciones">
+
+                        <button type="submit" class="btn btn-outline-secondary" >Calcular</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-5">
+        <h5>Matrices</h5>
+        <h5>El radio espectral es: {{data.esp}}</h5>
+        <table class="table">
+            <tr>
+                <th>Matriz T</th>
+                <th>Matriz C</th>
+            </tr>
+
+            <tr>
+                <td>{{data.t}}</td>
+                <td>{{data.c}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

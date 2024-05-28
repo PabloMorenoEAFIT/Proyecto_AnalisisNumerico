@@ -20,64 +20,64 @@ f(x)        = funcion evaluada en x (x cualquier valor)
 """
 
 # sistemas de 1 variable
-def biseccion(function_text, a, b, tol, max_count):
-    x = symbols('x')
-    f = eval(function_text)
-    results = {
-        "iterations": [],
-        "conclusion": None
+def biseccion(fx, Tol, Niter, a, b):
+    output = {
+        "columns": ["iter", "a", "xm", "b", "f(xm)", "E"],
+        "iterations": Niter,
+        "errors": list()
     }
 
-    if max_count < 0:
-        raise ValueError(f"Número máximo de iteraciones < 0: iteraciones = {max_count}")
+    # Configuraciones iniciales
+    datos = list()
+    x = Symbol('x')
+    i = 1
+    error = 1.0000000
+    Fun = sympify(fx)
 
-    if a >= b:
-        raise ValueError(f"a tiene que ser menor que b: a = {a} ^ b = {b}")
-    if tol < 0:
-        raise ValueError(f"la tolerancia es incorrecta: tol = {tol}")
+    Fa = Fun.subs(x, a) # Funcion evaluada en a
+    Fa = Fa.evalf()
 
-    count = 1
-    m = (a + b) / 2
-    error = m
+    xm0 = 0.0
+    Fxm = 0
 
-    while error > tol and count < max_count:
-        results["iterations"].append([
-            count,
-            format(a, '.10f'),
-            format(m, '.10f'),
-            format(b, '.10f'),
-            format(f.evalf(subs={x: m}), '.2e'),
-            format(error, '.2e')
-        ])
+    xm = (a + b)/2 # Punto intermedio
 
-        if f.evalf(subs={x: a}) * f.evalf(subs={x: m}) < 0:
-            b = m
+    Fxm = Fun.subs(x, xm) # Funcion evaluada en Xm
+    Fxm = Fxm.evalf()
+
+    try:
+        datos.append([0, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fxm)]) # Datos con formato dado
+        while (error > Tol) and (i < Niter): # Se repite hasta que el intervalo sea lo pequeño que se desee
+            if (Fa*Fxm < 0): # Se elecciona un intervalo inicial, donde el valor de la funcion cambie de signo en [a,b]
+                b = xm
+            else:
+                a = xm # Cambia de signo en [m,b]
+
+            xm0 = xm
+            xm = (a+b)/2 # Se calcula el punto intermedio del intervalo - Divide el intervalo a la mitadd
+
+            Fxm = Fun.subs(x, xm)
+            Fxm = Fxm.evalf() # Se evalua el punto intermedio en la funcion
+
+            error = Abs(xm-xm0) # Se calcula el error
+
+            datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), 
+                            '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fxm), '{:^15.7E}'.format(error)]) # Se van agregando las soluciones con el formato deseado
+
+            i += 1
+    except BaseException as e:
+        if str(e) == "can't convert complex to float":
+            output["errors"].append(
+                "Error in data: found complex in calculations")
         else:
-            a = m
+            output["errors"].append("Error in data: " + str(e))
 
-        m = (a + b) / 2
-        count += 1
-        error = (b - a) / 2
+        return output
 
-    results["iterations"].append([
-        count,
-        format(a, '.10f'),
-        format(m, '.10f'),
-        format(b, '.10f'),
-        format(f.evalf(subs={x: m}), '.2e'),
-        format(error, '.2e')
-    ])
+    output["results"] = datos
+    output["root"] = xm
+    return output
 
-    if f.evalf(subs={x: m}) == 0:
-        results["conclusion"] = f"Raíz hallada para m = {m:.15f}"
-    elif error <= tol:
-        results["conclusion"] = f"Aproximación de la raíz para m = {m:.15f}"
-    elif count == max_count:
-        results["conclusion"] = "Dada las iteraciones y la tolerancia, no fue posible satisfacer la raíz"
-    else:
-        results["conclusion"] = "El método explotó"
-
-    return results
 
 
 def puntoFijo(X0, Tol, Niter, fx, gx):

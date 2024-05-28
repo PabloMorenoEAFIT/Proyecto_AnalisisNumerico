@@ -1,7 +1,80 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block content %}
 
-Spline
+<div class="container mt-4"></div>
+<div class="info">
+    <h2>Método Spline Lineal</h2>
+</div>
 
-{% endblock %}
+
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+
+                        <label for="funcion">Conjunto X</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="x" 
+                                placeholder="X">
+
+                        <label for="funcion">Conjunto Y</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="y"  
+                                placeholder="Y">
+
+                        <button type="submit" class="btn btn-outline-secondary">Calcular</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultado -->
+
+    <div class="col-5">
+        <table class="table">
+                <h3>Coeficientes</h3>
+                <tr>
+                    <th scope="col">Valores</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in coef %}
+                <tr>
+                    <td>
+                        <h4>{{i}}</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="table">
+            <thead>
+                <h3>Polinomio</h3>
+                <tr>
+                    <th scope="col">Valores</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%for i in tracers %}
+                <tr>
+                    <td>
+                        <h4>{{i}}</h4>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+
+    {% endblock %}

@@ -1,7 +1,82 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block content %}
 
-newtonINt
+<div class="container mt-4"></div>
+<div class="info">
+    <h2>Método de Newton Interpolante</h2>
+</div>
 
-{% endblock %}
+
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+
+                        <label for="funcion">Conjunto X</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="x" 
+                                placeholder="X">
+
+                        <label for="funcion">Conjunto Y</label>
+                        <input type="text" 
+                                class="form-control" 
+                                name="y"  
+                                placeholder="Y">
+
+                        <button type="submit" class="btn btn-outline-secondary">Calcular</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultado -->
+
+    <div class="col-5">
+        <table class="table">
+                <h3>Matriz</h3>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <h4>{{datos.D}}</h4>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table">
+            <thead>
+                <h3>Coeficientes</h3>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <h4>{{datos.Coef}}</h4>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+<!--         <table class="table">
+            <thead>
+                <h3>Polinomio</h3>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <h4>{{data.polinomio}}</h4>
+                    </td>
+                </tr>
+            </tbody>
+        </table> -->
+    </div>
+
+    {% endblock %}

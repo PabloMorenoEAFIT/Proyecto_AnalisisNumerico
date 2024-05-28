@@ -34,7 +34,7 @@ def vistaBiseccion(request):
             max_count = int(request.POST.get("max_count"))
 
             try:
-                results = biseccion(function_text, a, b, tol, max_count)
+                results = biseccion(function_text, tol, max_count,a, b)
                 return render(request, './cadaMetodo/biseccion.html', {"results": results})
             except ValueError as e:
                 return render(request, 'error.html')
@@ -44,7 +44,6 @@ def vistaBiseccion(request):
         return render(request, 'error.html')
     
 def vistaPuntoFijo(request):
-    data = {}
     if request.method == 'POST':
         try:
             fx = request.POST.get("funcion-F")
@@ -55,13 +54,26 @@ def vistaPuntoFijo(request):
 
             try:
                 data = puntoFijo(x0, tol, niter, fx, gx)
-                return render(request, './cadaMetodo/punto-fijo.html', {"data": data})
+                
+                # Genera el contenido del archivo de texto
+                txt_content = "Iteración\tRaíz\n"
+                for i, sol in enumerate(data["soluciones"]):
+                    txt_content += f"{i+1}\t{sol}\n"
+                
+                # Crea la respuesta HTTP con el contenido del archivo
+                response = HttpResponse(txt_content, content_type='text/plain')
+                
+                # Establece el encabezado Content-Disposition para indicar la descarga del archivo
+                response['Content-Disposition'] = 'attachment; filename="punto_fijo_solution.txt"'
+                
+                return response
             except Exception as e:
                 return render(request, 'error.html')
         except Exception as e:
             return render(request, 'error.html')
     else:
         return render(request, './cadaMetodo/punto-fijo.html')
+
 
 
 
