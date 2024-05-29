@@ -72,7 +72,10 @@
                 {% endfor %}
             </tbody>
         </table>
-        
+        {% if plot_url %}
+            <h4>Gráfico de Spline</h4>
+            <img src="data:image/png;base64,{{ plot_url }}">
+        {% endif %}
     </div>
 
     {% endblock %}

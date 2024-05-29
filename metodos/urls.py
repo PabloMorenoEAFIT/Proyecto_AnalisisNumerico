@@ -28,5 +28,5 @@ urlpatterns = [
     path('error', views.vistaError, name="error.html"),
 
     # grafica
-    path('grafica', views.graficas, name="grafica.html"),
+    path('ayuda', views.graficas, name="grafica.html"),
 ]

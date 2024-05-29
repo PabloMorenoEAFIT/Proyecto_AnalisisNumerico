@@ -62,7 +62,10 @@
                 </tr>
             </tbody>
         </table>
-
+        {% if plot_url %}
+            <h4>Gráfico de Interpolación de Newton</h4>
+            <img src="data:image/png;base64,{{ plot_url }}">
+        {% endif %}
     </div>
 
     {% endblock %}

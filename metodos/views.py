@@ -213,6 +213,18 @@ def vistaGaussSeidel(request):
 
             try:
                 datos = gaussSeidel(matrizA, vectorB, Vectorx0, tol, niter)
+                # data_t = datos["t"]
+                # data_c = datos["c"]
+                # print(data_t)
+
+                # # Convertir los datos a formato de texto
+                # text_data = data_c 
+
+                # # Configurar la respuesta HTTP con el archivo de texto
+                # response = HttpResponse(text_data, content_type='text/plain')
+                # response['Content-Disposition'] = 'attachment; filename="gauss_seidel_results.txt"'
+                
+                # Retornar la respuesta HTTP junto con los datos para el HTML
                 return render(request, './cadaMetodo/gauss-seidel.html', {"data": datos})
             except Exception as e:
                 return render(request, 'error.html')
@@ -266,33 +278,53 @@ def vistaVandermonde(request):
     else:
         return render(request, './cadaMetodo/vandermonde.html')
 
-
 def vistaSpline(request):
+    Coef = []
+    Tracers = []
+    error_message = None
+    plot_url = None
+    output = {"errors": []}
+
     if request.method == 'POST':
         try:
-        
-                
             x = request.POST["x"]
-            X = x.split(",")
-            X = [float(i) for i in X]
+            X = toVector(x)
             y = request.POST["y"]
-            Y = y.split(",")
-            Y = [float(i) for i in Y]
+            Y = toVector(y)
             tipo = int(request.POST["tipo"])    
 
             output = SplineGeneral(X, Y, tipo)
-            Coef = output["results"] if "results" in output else []
-            Errors = output["errors"]
+            print(output)
 
-            if(len(Errors)==0):    
-                Dic = splineOutput(output)
-                data = Dic.split("\n")
-                Coef = [data[7], data[8], data[9]]
-                Tracers = [data[12], data[13], data[14]]
+            if not output["errors"]:
+                X, Y, x_vals, y_vals = output["results"]
+                Coef = output["coef"]
+                Tracers = output["tracers"]
+
                 
-                
+
+                # Graficar los resultados
+                plt.figure(figsize=(6, 3))
+                plt.scatter(X, Y, color='g')
+                plt.plot(x_vals, y_vals)
+
+                plt.title('Método Spline')
+                plt.xlabel('x')
+                plt.ylabel('f(x)')
+                plt.legend()
+                buf = io.BytesIO()
+                plt.savefig(buf, format='png')
+                buf.seek(0)
+                string = base64.b64encode(buf.read())
+                plot_url = urllib.parse.quote(string)
+            else:
+                error_message = output["errors"][0]
             try:
-                return render(request, './cadaMetodo/spline.html', {"coef":Coef, "tracers":Tracers ,"errors":Errors})
+                return render(request, './cadaMetodo/spline.html', {
+                    "coef":Coef,
+                    "tracers":Tracers ,
+                    "errors":error_message,
+                    'plot_url':plot_url})
             except Exception as e:
                 return render(request, 'error.html')
         except Exception as e:
@@ -302,19 +334,49 @@ def vistaSpline(request):
 
 def vistaNewtonInt(request):
     datos = ()
+
+    error_message = None
+    plot_url = None
+    coefficients = []
     if request.method == 'POST':
         try:
-            if request.method == 'POST':
-                x = request.POST["x"]
-                X = x.split(",")
-                X = [float(i) for i in X]
-                y = request.POST["y"]
-                Y = y.split(",")
-                Y = [float(i) for i in Y]
+            
+            x = request.POST["x"]
+            X = toVector(x)
+            y = request.POST["y"]
+            Y = toVector(y)
+
+            output = newtonInt(X, Y)
+
+            if "errors" not in output:
+                D = output["D"]
+                Coef = output["Coef"]
+
+                # Graficar los resultados
+                x_vals = np.linspace(min(X), max(X), 100)
+                y_vals = [newton_poly(Coef, X, x) for x in x_vals]
+
+                plt.figure(figsize=(6, 3))
+                plt.scatter(X, Y, color='g')
+                plt.plot(x_vals, y_vals)
+
+                plt.xlabel('x')
+                plt.ylabel('f(x)')
+                plt.legend()
+                buf = io.BytesIO()
+                plt.savefig(buf, format='png')
+                buf.seek(0)
+                string = base64.b64encode(buf.read())
+                plot_url = urllib.parse.quote(string)
 
             try:
                 datos = newtonInt(X,Y) 
-                return render(request, './cadaMetodo/newton-interpolante.html', {"datos": datos})
+                return render(request, './cadaMetodo/newton-interpolante.html', {
+                    "datos": datos,
+                    'coefficients': coefficients,
+                    'error_message': error_message,
+                    'plot_url': plot_url
+                })
             except Exception as e:
                 return render(request, 'error.html')
         except Exception as e:
@@ -343,11 +405,10 @@ def vistaLagrange(request):
             x_vals = np.linspace(min(X), max(X), 100)
             y_vals = np.polyval(coefficients, x_vals)
 
-            plt.figure(figsize=(10, 5))
-            plt.scatter(X, Y, color='r', label='Puntos')
-            plt.plot(x_vals, y_vals, label='Interpolación de Lagrange')
+            plt.figure(figsize=(6, 3))
+            plt.scatter(X, Y, color='g')
+            plt.plot(x_vals, y_vals)
 
-            plt.title('Interpolación de Lagrange')
             plt.xlabel('x')
             plt.ylabel('f(x)')
             plt.legend()
@@ -358,7 +419,7 @@ def vistaLagrange(request):
             plot_url = urllib.parse.quote(string)
 
         except Exception as e:
-            error_message = str(e)
+            return render(request, 'error.html')
 
     return render(request, './cadaMetodo/lagrange.html', {
         'coefficients': coefficients,
@@ -429,6 +490,7 @@ def splineOutput(output):
     return stringOutput
 
 def newtonDiffDivOutput(output):
+
     stringOutput = f'\n"Metodo"\n'
     stringOutput += "\nResults:\n"
     stringOutput += "\nDivided differences table:\n\n"
@@ -450,3 +512,10 @@ def newtonDiffDivOutput(output):
 
     stringOutput += "\n______________________________________________________________\n"
     return stringOutput
+
+def newton_poly(coef, x_data, x):
+    n = len(x_data) - 1
+    p = coef[n]
+    for k in range(1, n + 1):
+        p = coef[n - k] + (x - x_data[n - k]) * p
+    return p

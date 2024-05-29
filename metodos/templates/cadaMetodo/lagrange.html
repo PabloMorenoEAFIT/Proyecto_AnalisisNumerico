@@ -28,7 +28,6 @@
         </div>
     </div>
 
-    <!-- Resultado -->
     <div class="col-5">
             <h4>Coeficientes</h4>
             <table class="table">
@@ -45,8 +44,8 @@
                 </tbody>
             </table>
         {% if plot_url %}
-            <h2>Gráfico de Interpolación de Lagrange</h2>
-            <img src="data:image/png;base64,{{ plot_url }}" alt="Gráfico de Interpolación de Lagrange">
+            <h4>Gráfico de Interpolación de Lagrange</h4>
+            <img src="data:image/png;base64,{{ plot_url }}">
         {% endif %}
     </div>
 </div>

@@ -7,6 +7,7 @@ from scipy import linalg
 from math import exp
 from sympy import symbols, log, sin, evalf
 import math
+from scipy.interpolate import interp1d, CubicSpline
 
 """
 variables y uso:
@@ -511,160 +512,133 @@ def sor(Ma, Vb, x0, w, tol, niter):
 
 def splineLineal(X, Y):
     output = {
-        "errors": list()
+        "errors": list(),
+        "results": None,
+        "tracers": None
     }
-    X = np.array(X)
-    Y = np.array(Y)
-    n = X.size
-    m = 2*(n-1) #factor m para la formula de los trazadores
-    A = np.zeros((m, m))
-    b = np.zeros((m, 1))
-    Coef = np.zeros((n-1, 2))
-    i = 0
-    # Interpolating condition
+
     try:
-        while i < X.size-1:
-            A[i+1, [2*i+1-1, 2*i+1]] = [X[i+1], 1]  #Realiza la formula de interpolacion de superficie 
-            b[i+1] = Y[i+1]
-            i = i+1
+        X = np.array(X)
+        Y = np.array(Y)
 
-        A[0, [0, 1]] = [X[0], 1]
-        b[0] = Y[0]
-        i = 1
-        # Condition of continuity
-        while i < X.size-1:
-            A[X.size-1+i, 2*i-2:2*i+2] = np.hstack((X[i], 1, -X[i], -1))
-            b[X.size-1+i] = 0
-            i = i+1
+        # Verifica que haya suficientes puntos para una interpolación lineal
+        if len(X) < 2:
+            output["errors"].append(
+                "Se requieren al menos 2 puntos para una interpolación lineal.")
+            return output
 
-        Saux = linalg.solve(A, b)
-        # Order Coefficients
-        i = 0
-        while i < X.size-1:
-            Coef[i, :] = [Saux[2*i], Saux[2*i+1]]
-            i = i+1
+        # Realiza la interpolación lineal
+        linear_interpolation = interp1d(X, Y, kind='linear')
 
-    except BaseException as e:
+        # Genera puntos de muestra para graficar el polinomio interpolado
+        x_vals = np.linspace(min(X), max(X), 500)
+        y_vals = linear_interpolation(x_vals)
+
+        # Calcula los coeficientes del polinomio
+        coef = []
+        for i in range(len(X) - 1):
+            slope = (Y[i + 1] - Y[i]) / (X[i + 1] - X[i])
+            intercept = Y[i] - slope * X[i]
+            coef.append([slope, intercept])
+
+        # Formatea los polinomios para mostrarlos
+        tracers = [f"S{i}(x) = {slope:.2f}*x + {intercept:.2f}" for
+                   i, (slope, intercept) in enumerate(coef)]
+
+        # Guarda los resultados en el output
+        output["results"] = (X, Y, x_vals, y_vals)
+        output["coef"] = coef
+        output["tracers"] = tracers
+    except Exception as e:
         output["errors"].append("Error in data: " + str(e))
-        return output
 
-    output["results"] = Coef
     return output
 
 def splineCuadratica(X, Y):
     output = {
-        "errors": list()
+        "errors": list(),
+        "results": None,
+        "tracers": None
     }
-    X = np.array(X)
-    Y = np.array(Y)
-    n = X.size
-    m = 3*(n-1) # Factor m para la formula de los trazadores, como es cuadratica se multiplica por 3
-    A = np.zeros((m, m))
-    b = np.zeros((m, 1))
-    Coef = np.zeros((n-1, 3))
-    i = 0
+
     try:
-        # Interpolating condition
-        while i < X.size-1:
+        X = np.array(X)
+        Y = np.array(Y)
 
-            A[i+1, 3*i:3*i+3] = np.hstack((X[i+1]**2, X[i+1], 1)) #Realiza la formula de interpolacion de superficie 
-            b[i+1] = Y[i+1]
-            i = i+1
+        # Verifica que haya suficientes puntos para una interpolación cuadrática
+        if len(X) < 3:
+            output["errors"].append(
+                "Se requieren al menos 3 puntos para una interpolación cuadrática.")
+            return output
 
-        A[0, 0:3] = np.hstack((X[0]**2, X[0]**1, 1))
-        b[0] = Y[0]
-        # Condition of continuity
-        i = 1
-        while i < X.size-1:
-            A[X.size-1+i, 3*i-3:3*i +
-                3] = np.hstack((X[i]**2, X[i], 1, -X[i]**2, -X[i], -1))
-            b[X.size-1+i] = 0
-            i = i+1
-        # Condition of smoothness
-        i = 1
-        while i < X.size-1:
-            A[2*n-3+i, 3*i-3:3*i+3] = np.hstack((2*X[i], 1, 0, -2*X[i], -1, 0))
-            b[2*n-3+i] = 0
-            i = i+1
-        A[m-1, 0] = 2
-        b[m-1] = 0
+        # Realiza la interpolación cuadrática
+        quadratic_interpolation = interp1d(X, Y, kind='quadratic')
 
-        Saux = linalg.solve(A, b)
-        # Order Coefficients
-        i = 0
-        j = 0
-        while i < n-1:
-            Coef[i, :] = np.hstack((Saux[j], Saux[j+1], Saux[j+2]))
-            i = i+1
-            j = j + 3
-    except BaseException as e:
+        # Genera puntos de muestra para graficar el polinomio interpolado
+        x_vals = np.linspace(min(X), max(X), 500)
+        y_vals = quadratic_interpolation(x_vals)
+
+        # Calcula los coeficientes del polinomio
+        coef = []
+        for i in range(len(X) - 1):
+            x_section = X[i:i + 3]
+            y_section = Y[i:i + 3]
+            poly = np.polyfit(x_section, y_section, 2)
+            coef.append(poly)
+
+        # Formatea los polinomios para mostrarlos
+        tracers = [
+            f"S{i}(x) = {poly[0]:.2f}*x^2 + {poly[1]:.2f}*x + {poly[2]:.2f}" for
+            i, poly in enumerate(coef)]
+
+        # Guarda los resultados en el output
+        output["results"] = (X, Y, x_vals, y_vals)
+        output["coef"] = coef
+        output["tracers"] = tracers
+    except Exception as e:
         output["errors"].append("Error in data: " + str(e))
-        return output
 
-    output["results"] = Coef
     return output
 
 def splineCubica(X, Y):
     output = {
-        "errors": list()
+        "errors": list(),
+        "results": None,
+        "tracers": None
     }
-    X = np.array(X)
-    Y = np.array(Y)
-    n = X.size
-    m = 4*(n-1)
-    A = np.zeros((m,m))
-    b = np.zeros((m,1))
-    Coef = np.zeros((n-1,4))
-    i = 0
+
     try:
-        #Interpolating condition
-        while i < X.size-1:
-            
-            A[i+1,4*i:4*i+4]= np.hstack((X[i+1]**3,X[i+1]**2,X[i+1],1)) 
-            b[i+1]=Y[i+1]
-            i = i+1
+        X = np.array(X)
+        Y = np.array(Y)
 
-        A[0,0:4] = np.hstack((X[0]**3,X[0]**2,X[0]**1,1))
-        b[0] = Y[0]
-        #Condition of continuity
-        i = 1
-        while i < X.size-1:
-            A[X.size-1+i,4*i-4:4*i+4] = np.hstack((X[i]**3,X[i]**2,X[i],1,-X[i]**3,-X[i]**2,-X[i],-1))
-            b[X.size-1+i] = 0
-            i = i+1
-        #Condition of smoothness
-        i = 1
-        while i < X.size-1:
-            A[2*n-3+i,4*i-4:4*i+4] = np.hstack((3*X[i]**2,2*X[i],1,0,-3*X[i]**2,-2*X[i],-1,0))
-            b[2*n-3+i] = 0
-            i = i+1
-        
-        #Concavity condition
-        i = 1
-        while i < X.size-1:
-            A[3*n-5+i,4*i-4:4*i+4] = np.hstack((6*X[i],2,0,0,-6*X[i],-2,0,0))
-            b[n+5+i] = 0
-            i = i+1
-        
-        #Boundary conditions  
-        A[m-2,0:2]=[6*X[0],2];
-        b[m-2]=0;
-        A[m-1,m-4:m-2]=[6*X[X.size-1],2];
-        b[m-1]=0;
-        
-        Saux = linalg.solve(A,b)
-        #Order Coefficients
-        i = 0
-        j = 0
-        while i < n-1:
-            Coef[i,:] = np.hstack((Saux[j],Saux[j+1],Saux[j+2],Saux[j+3]))
-            i = i+1
-            j = j + 4
-    except BaseException as e:  
+        # Verifica que haya suficientes puntos para una interpolación cúbica
+        if len(X) < 4:
+            output["errors"].append(
+                "Se requieren al menos 4 puntos para una interpolación cúbica.")
+            return output
+
+        # Realiza la interpolación cúbica
+        cs = CubicSpline(X, Y, bc_type='natural')
+
+        # Genera puntos de muestra para graficar el polinomio interpolado
+        x_vals = np.linspace(min(X), max(X), 500)
+        y_vals = cs(x_vals)
+
+        # Calcula los coeficientes del polinomio
+        coef = cs.c.T  # Coeficientes de los polinomios
+
+        # Formatea los polinomios para mostrarlos
+        tracers = [
+            f"S{i}(x) = {coef[i, 0]:.2f}*x^3 + {coef[i, 1]:.2f}*x^2 + {coef[i, 2]:.2f}*x + {coef[i, 3]:.2f}"
+            for i in range(len(coef))]
+
+        # Guarda los resultados en el output
+        output["results"] = (X, Y, x_vals, y_vals)
+        output["coef"] = coef
+        output["tracers"] = tracers
+    except Exception as e:
         output["errors"].append("Error in data: " + str(e))
-        return output
 
-    output["results"] = Coef
     return output
 
 def SplineGeneral(X, Y, n):
@@ -725,22 +699,15 @@ def newtonInt(X, Y):
     return output
 
 def lagrange(x, y):
-    """
-    Calcula los coeficientes del polinomio de interpolación de Lagrange.
-
-    :param x: Lista de valores de x.
-    :param y: Lista de valores de y.
-    :return: Coeficientes del polinomio interpolado.
-    """
     n = len(x)
-    polynomial = np.zeros(n)
+    polynomial = np.poly1d([0.0])
 
     for i in range(n):
-        Li = np.poly1d([1])
-        den = 1
+        Li = np.poly1d([1.0])
+        den = 1.0
         for j in range(n):
             if j != i:
-                Li *= np.poly1d([1, -x[j]])
+                Li *= np.poly1d([1.0, -x[j]])
                 den *= (x[i] - x[j])
         polynomial += y[i] * Li / den
 
