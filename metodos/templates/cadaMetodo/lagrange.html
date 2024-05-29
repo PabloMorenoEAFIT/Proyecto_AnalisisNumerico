@@ -7,4 +7,48 @@
     <h2>Método de Lagrange</h2>
 </div>
 
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label for="x">Valores de X</label>
+                        <input type="text" class="form-control" name="x" placeholder="Ingrese el vector X" required>
+
+                        <label for="y">Valores de Y</label>
+                        <input type="text" class="form-control" name="y" placeholder="Ingrese el vector Y" required>
+
+                        <button type="submit" class="btn btn-outline-secondary">Interpolar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resultado -->
+    <div class="col-5">
+            <h4>Coeficientes</h4>
+            <table class="table">
+                    <tr>
+                        <th>Valores</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for coeff in coefficients %}
+                    <tr>
+                        <td>{{ coeff }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% if plot_url %}
+            <h2>Gráfico de Interpolación de Lagrange</h2>
+            <img src="data:image/png;base64,{{ plot_url }}" alt="Gráfico de Interpolación de Lagrange">
+        {% endif %}
+    </div>
+</div>
+
 {% endblock %}

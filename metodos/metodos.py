@@ -78,8 +78,6 @@ def biseccion(fx, Tol, Niter, a, b):
     output["root"] = xm
     return output
 
-
-
 def puntoFijo(X0, Tol, Niter, fx, gx):
     output = {
         "columns": ["iter", "xi", "g(xi)", "f(xi)", "E"],
@@ -130,7 +128,6 @@ def puntoFijo(X0, Tol, Niter, fx, gx):
     output["results"] = datos
     output["root"] = xA
     return output
-
 
 def newton(x0, Tol, Niter, fx, df):
 
@@ -184,85 +181,57 @@ def newton(x0, Tol, Niter, fx, df):
     output["root"] = xi
     return output
 
-
 def reglaFalsa(a, b, Niter, Tol, fx):
-
     output = {
         "columns": ["iter", "a", "xm", "b", "f(xm)", "E"],
         "iterations": Niter,
         "errors": list()
     }
 
-    #configuración inicial
+    # Configuración inicial
     datos = list()
     x = sympy.Symbol('x')
     i = 1
     cond = Tol
-    error = 1.0000000
+    error = 1.0
 
     Fun = sympify(fx)
 
     xm = 0
     xm0 = 0
-    Fx_2 = 0
-    Fx_3 = 0
-    Fa = 0
-    Fb = 0
+    Fa = Fun.subs(x, a).evalf()
+    Fb = Fun.subs(x, b).evalf()
 
     try:
-        while (error > cond) and (i < Niter):
+        while error > cond and i <= Niter:
+            xm = (Fb * a - Fa * b) / (Fb - Fa)
+            Fx_3 = Fun.subs(x, xm).evalf()
+
             if i == 1:
-                Fx_2 = Fun.subs(x, a)
-                Fx_2 = Fx_2.evalf()
-                Fa = Fx_2
-
-                Fx_2 = Fun.subs(x, b)
-                Fx_2 = Fx_2.evalf()
-                Fb = Fx_2
-
-                xm = (Fb*a - Fa*b)/(Fb-Fa)
-                Fx_3 = Fun.subs(x, xm)
-                Fx_3 = Fx_3.evalf()
-                datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3)])
+                datos.append([i, f'{a:^15.7f}', f'{xm:^15.7f}', f'{b:^15.7f}', f'{Fx_3:^15.7E}', '-'])
             else:
+                error = Abs(xm - xm0).evalf()
+                datos.append([i, f'{a:^15.7f}', f'{xm:^15.7f}', f'{b:^15.7f}', f'{Fx_3:^15.7E}', f'{error:^15.7E}'])
 
-                if (Fa*Fx_3 < 0):
-                    b = xm
-                else:
-                    a = xm
+            if Fa * Fx_3 < 0:
+                b = xm
+                Fb = Fx_3
+            else:
+                a = xm
+                Fa = Fx_3
 
-                xm0 = xm
-                Fx_2 = Fun.subs(x, a) #Función evaluada en a
-                Fx_2 = Fx_2.evalf()
-                Fa = Fx_2
-
-                Fx_2 = Fun.subs(x, b) #Función evaluada en a
-                Fx_2 = Fx_2.evalf()
-                Fb = Fx_2
-
-                xm = (Fb*a - Fa*b)/(Fb-Fa) #Calcular intersección en la recta en el eje x
-
-                Fx_3 = Fun.subs(x, xm) #Función evaluada en xm (f(xm))
-                Fx_3 = Fx_3.evalf()
-
-                error = Abs(xm-xm0)
-                er = sympify(error)
-                error = er.evalf()
-                datos.append([i, '{:^15.7f}'.format(a), '{:^15.7f}'.format(xm), '{:^15.7f}'.format(b), '{:^15.7E}'.format(Fx_3), '{:^15.7E}'.format(error)])
+            xm0 = xm
             i += 1
     except BaseException as e:
         if str(e) == "can't convert complex to float":
-            output["errors"].append(
-                "Error in data: found complex in calculations")
+            output["errors"].append("Error in data: found complex in calculations")
         else:
             output["errors"].append("Error in data: " + str(e))
-
         return output
 
     output["results"] = datos
     output["root"] = xm
     return output
-
 
 def secante(fx, tol, Niter, x0, x1):
     output = {
@@ -320,7 +289,6 @@ def secante(fx, tol, Niter, x0, x1):
     output["results"] = results
     output["root"] = y
     return output
-
 
 def raicesMultiples(fx, x0, tol, niter):
 
@@ -403,23 +371,21 @@ def jacobi(Ma, Vb, x0, tol, niter):
     }
 
     A = np.matrix(Ma)
-
-
     sX = np.size(x0)
     xA = np.zeros((sX, 1))
 
     b = np.array(Vb)
     s = b.size
-    b = np.reshape(b, (s, 1)) #Rehace el tamaño del vector b
+    b = np.reshape(b, (s, 1)) # Rehace el tamaño del vector b
 
-    D = np.diag(np.diag(A)) #saca la diagonal de la matriz A
-    L = -1*np.tril(A)+D #saca la matriz Lower de la matriz A
-    U = -1*np.triu(A)+D #Saca la matriz Upper de la matriz A
-    LU = L+U
+    D = np.diag(np.diag(A)) # Saca la diagonal de la matriz A
+    L = -1 * np.tril(A) + D # Saca la matriz Lower de la matriz A
+    U = -1 * np.triu(A) + D # Saca la matriz Upper de la matriz A
+    LU = L + U
 
-    T = np.linalg.inv(D) @ LU #Obtiene la matriz de Transicion multiplicando el inverso de D por la matriz LU
-    tFinal=max(abs(np.linalg.eigvals(T)))
-    C = np.linalg.inv(D) @ b #Obtiene la matriz de coeficientes multiplicando el inverso de la matriz de D por la matriz b
+    T = np.linalg.inv(D) @ LU # Obtiene la matriz de Transición multiplicando el inverso de D por la matriz LU
+    tFinal = max(abs(np.linalg.eigvals(T)))
+    C = np.linalg.inv(D) @ b # Obtiene la matriz de coeficientes multiplicando el inverso de la matriz de D por la matriz b
 
     output["t"] = T
     output["c"] = C
@@ -428,22 +394,23 @@ def jacobi(Ma, Vb, x0, tol, niter):
     E = 1000
     cont = 0
 
-
     steps = {'Step 0': np.copy(xA)}
-    while(E > tol and cont < niter):
-        xA = T@xP + C
-        E = np.linalg.norm(xP - xA)
-        xP = xA
-        cont = cont + 1
-        steps[f'Step {cont+1}'] = np.copy(xA)
-        print(xA [: , 1])
+    try:
+        while (E > tol and cont < niter):
+            xA = T @ xP + C
+            E = np.linalg.norm(xP - xA)
+            xP = xA
+            cont = cont + 1
+            steps[f'Step {cont}'] = np.copy(xA)
 
+    except Exception as e:
+        output["errors"].append(str(e))
+        return output
 
-
-    resultado={"t":T,
-                "c":C,
-                "esp":tFinal}
-    return resultado
+    output["steps"] = steps
+    output["spectral_radius"] = tFinal
+    output["root"] = xA
+    return output
 
 
 def gaussSeidel(Ma, Vb, x0, tol, niter):
@@ -700,6 +667,16 @@ def splineCubica(X, Y):
     output["results"] = Coef
     return output
 
+def SplineGeneral(X, Y, n):
+    if n == 1:
+        return splineLineal(X,Y)
+    elif n== 2:
+        return splineCuadratica(X,Y)
+    elif n== 3:
+        return splineCubica(X,Y)
+    else: 
+        pass
+
 def vandermonde(a,b):
     copiaB=np.copy(b)
     longitudMatriz=len(a)
@@ -723,31 +700,48 @@ def vandermonde(a,b):
 
     return datos
 
-def newton_interpolation(x, y):
-    n = len(x)
-    Tabla = np.zeros((n, n+1))
-    Tabla[:, 0] = x
-    Tabla[:, 1] = y
-    
-    for j in range(2, n+1):
-        for i in range(j-1, n):
-            Tabla[i, j] = (Tabla[i, j-1] - Tabla[i-1, j-1]) / (Tabla[i, 0] - Tabla[i-j+1, 0])
-    
-    return Tabla
+def newtonInt(X, Y):
+    output = {}
 
-def lagrange_interpolation(x, y):
+    X = np.array(X)
+    n = X.size
+
+    Y = np.array(Y)
+
+    D = np.zeros((n,n))
+
+    D[:,0]=Y.T
+    for i in range(1,n):
+        aux0 = D[i-1:n,i-1]
+        aux = np.diff(aux0)
+        aux2 = X[i:n] - X[0:n-i]
+        D[i:n,i] = aux/aux2.T  
+        Coef = np.diag(D)
+    output["D"] = D
+    output["Coef"] = Coef
+    print(D)
+    print(Coef)
+
+    return output
+
+def lagrange(x, y):
+    """
+    Calcula los coeficientes del polinomio de interpolación de Lagrange.
+
+    :param x: Lista de valores de x.
+    :param y: Lista de valores de y.
+    :return: Coeficientes del polinomio interpolado.
+    """
     n = len(x)
-    Tabla = np.zeros((n, n))
-    
+    polynomial = np.zeros(n)
+
     for i in range(n):
-        Li = np.array([1])
+        Li = np.poly1d([1])
         den = 1
         for j in range(n):
             if j != i:
-                paux = np.array([1, -x[j]])
-                Li = np.convolve(Li, paux)
+                Li *= np.poly1d([1, -x[j]])
                 den *= (x[i] - x[j])
-        Tabla[i, :] = y[i] * Li / den
-    
-    pol = np.sum(Tabla, axis=0)
-    return pol
+        polynomial += y[i] * Li / den
+
+    return polynomial.coeffs

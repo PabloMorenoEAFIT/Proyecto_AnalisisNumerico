@@ -4,7 +4,8 @@
 
 <div class="container mt-4"></div>
 <div class="info">
-    <h2>Método Spline Lineal</h2>
+    <h2>Método Spline</h2>
+    <h3>(lineal, cuadrática y cúbica)</h3>
 </div>
 
 
@@ -19,16 +20,13 @@
                         {% csrf_token %}
 
                         <label for="funcion">Conjunto X</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="x" 
-                                placeholder="X">
+                        <input type="text" class="form-control" name="x" placeholder="X">
 
                         <label for="funcion">Conjunto Y</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="y"  
-                                placeholder="Y">
+                        <input type="text" class="form-control" name="y"  placeholder="Y">
+
+                        <label for="funcion">Metono de Spline (1, 2 o 3)</label>
+                        <input type="text" class="form-control" name="tipo"  placeholder="lineal, cuadratica o cubica">
 
                         <button type="submit" class="btn btn-outline-secondary">Calcular</button>
                     </div>

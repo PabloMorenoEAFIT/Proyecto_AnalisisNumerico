@@ -18,40 +18,19 @@
                     <div class="form-group">
                         {% csrf_token %}
                         <label for="funcion">Matriz A</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="matrizA" 
-                                placeholder="Matriz A">
+                        <input type="text" class="form-control" name="mA" placeholder="Matriz A">
 
                         <label for="funcion">Vector X0</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="vectorX0"  
-                                placeholder="X0t">
+                        <input type="text" class="form-control" name="X0"  placeholder="X0t">
 
                         <label for="funcion">Vector B</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="vectorB" 
-                                placeholder="B">
+                        <input type="text" class="form-control" name="B" placeholder="B">
 
                         <label for="funcion">Tolerancia</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="tolerancia" 
-                                placeholder="Tolerancia">
-
-<!--                         <label for="funcion">Valor norma</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="norma" 
-                                placeholder="Example input"> -->
+                        <input type="text" class="form-control" name="tolerancia" placeholder="Tolerancia">
 
                         <label for="funcion">Iteraciones</label>
-                        <input type="text" 
-                                class="form-control" 
-                                name="iteraciones" 
-                                placeholder="Iteraciones">
+                        <input type="text" class="form-control" name="iteraciones"  placeholder="Iteraciones">
 
                         <button type="submit" class="btn btn-outline-secondary" >Calcular</button>
                     </div>

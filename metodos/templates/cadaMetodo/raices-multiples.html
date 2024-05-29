@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container mt-4"></div>
+<div class="info">
+    <h2>Método de Raíces Múltiples</h2>
+</div>
+
+
+
+<div class="row mt-5 mb-10">
+    <div class="col-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ingrese sus datos</h5>
+                <form method="post">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        <label for="funcion">Función</label>
+                        <input type="text" class="form-control" name="funcion" placeholder="F(x)">
+
+                        <label for="funcion">X0</label>
+                        <input type="text" class="form-control" name="x0"  placeholder="X0">
+
+                        <label for="funcion">Tolerancia</label>
+                        <input type="text" class="form-control" name="tolerancia" placeholder="Tol">
+
+                        <label for="funcion">Iteraciones</label>
+                        <input type="text" class="form-control" name="iteraciones" placeholder="Iteraciones">
+
+                        <button type="submit" class="btn btn-outline-secondary" >Calcular</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-5">
+        <h5>Resultados: {{data.root}}</h5>
+        <table class="table">
+                <tr>
+                    <th>Iter</th>
+                    <th>Xi</th>
+                    <th>f(Xi)</th>
+                    <th>Error</th>
+                </tr>
+            <tbody>
+                {%for dato in data.results %}
+                <tr>
+                    {%for valores in dato %}
+                    <td>{{valores}}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
